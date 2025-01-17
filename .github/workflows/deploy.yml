@@ -14,7 +14,7 @@ on:
       env:
         description: 'Env for deploy'
         required: true
-        default: 'TEST'
+        default: 'test'
         type: environment
         
 run-name: Deploy by @${{ github.actor }} to ${{ inputs.env || 'TEST' }}
