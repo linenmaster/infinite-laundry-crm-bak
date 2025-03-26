@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_google_calendar_event" model="ir.ui.view">
+        <field name="name">google_calendar.event.calendar</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <field name="location" position="after">
+                <field name="google_id" invisible="1"/>
+                <field name="new_attendee_ids" invisible="0" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_google_calendar_event_form" model="ir.ui.view">
+        <field name="name">google_calendar.event.calendar.form</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='alert alert-warning o_form_header mt-2']" position="after">
+                    <field name="new_attendee_ids" readonly="1" widget="many2many_tags" string="Meeting Attendees"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>
