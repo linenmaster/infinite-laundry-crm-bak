@@ -5,8 +5,8 @@ import logging
 
 
 from odoo import api, fields, models, Command
-from odoo.addons.til_google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
-from odoo.addons.til_google_calendar.models.google_sync import google_calendar_token
+from odoo.addons.il_google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
+from odoo.addons.il_google_calendar.models.google_sync import google_calendar_token
 from odoo.loglevels import exception_to_unicode
 from odoo.tools import str2bool
 

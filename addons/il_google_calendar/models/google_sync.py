@@ -15,8 +15,8 @@ from odoo.osv import expression
 from odoo.sql_db import BaseCursor
 from datetime import datetime
 
-from odoo.addons.til_google_calendar.utils.google_event import GoogleEvent
-from odoo.addons.til_google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.il_google_calendar.utils.google_event import GoogleEvent
+from odoo.addons.il_google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_account.models.google_service import TIMEOUT
 
 _logger = logging.getLogger(__name__)

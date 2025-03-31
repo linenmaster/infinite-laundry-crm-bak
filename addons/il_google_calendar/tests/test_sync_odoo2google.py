@@ -5,9 +5,9 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
-from odoo.addons.til_google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
+from odoo.addons.il_google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
-from odoo.addons.til_google_calendar.models.res_users import User
+from odoo.addons.il_google_calendar.models.res_users import User
 from .test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged

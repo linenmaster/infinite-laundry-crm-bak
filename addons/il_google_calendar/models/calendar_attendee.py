@@ -3,8 +3,8 @@
 
 from odoo import models
 
-from odoo.addons.til_google_calendar.models.google_sync import google_calendar_token
-from odoo.addons.til_google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.il_google_calendar.models.google_sync import google_calendar_token
+from odoo.addons.il_google_calendar.utils.google_calendar import GoogleCalendarService
 
 class Attendee(models.Model):
     _name = 'calendar.attendee'
