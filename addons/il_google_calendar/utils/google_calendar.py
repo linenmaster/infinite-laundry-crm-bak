@@ -7,7 +7,7 @@ import json
 import logging
 
 from odoo import fields
-from odoo.addons.til_google_calendar.utils.google_event import GoogleEvent
+from odoo.addons.il_google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_account.models.google_service import TIMEOUT
 
 

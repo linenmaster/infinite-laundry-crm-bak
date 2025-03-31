@@ -10,7 +10,7 @@ from uuid import uuid4
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.til_google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.il_google_calendar.utils.google_calendar import GoogleCalendarService
 
 
 class Meeting(models.Model):

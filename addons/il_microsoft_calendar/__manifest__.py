@@ -5,7 +5,7 @@
     'name': 'Outlook Calendar',
     'version': '1.0',
     'category': 'Productivity',
-    'depends': ['microsoft_account', 'calendar','til_google_calendar'],
+    'depends': ['microsoft_account', 'calendar','il_google_calendar'],
     'data': [
         'data/microsoft_calendar_data.xml',
         'security/microsoft_calendar_security.xml',
@@ -19,15 +19,15 @@
     'post_init_hook': 'init_initiating_microsoft_uuid',
     'assets': {
         'web.assets_backend': [
-            'til_microsoft_calendar/static/src/scss/microsoft_calendar.scss',
-            'til_microsoft_calendar/static/src/views/**/*',
+            'il_microsoft_calendar/static/src/scss/microsoft_calendar.scss',
+            'il_microsoft_calendar/static/src/views/**/*',
         ],
         'web.qunit_suite_tests': [
-            'til_microsoft_calendar/static/tests/microsoft_calendar_mock_server.js',
-            'til_microsoft_calendar/static/tests/microsoft_calendar_tests.js',
+            'il_microsoft_calendar/static/tests/microsoft_calendar_mock_server.js',
+            'il_microsoft_calendar/static/tests/microsoft_calendar_tests.js',
         ],
         'web.qunit_mobile_suite_tests': [
-            'til_microsoft_calendar/static/tests/microsoft_calendar_mock_server.js',
+            'il_microsoft_calendar/static/tests/microsoft_calendar_mock_server.js',
         ],
     },
     'license': 'LGPL-3',

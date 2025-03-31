@@ -3,10 +3,10 @@
 
 from unittest.mock import MagicMock, patch
 
-from odoo.addons.til_google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.il_google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
-from odoo.addons.til_google_calendar.models.res_users import User
-from odoo.addons.til_google_calendar.models.google_sync import GoogleSync
+from odoo.addons.il_google_calendar.models.res_users import User
+from odoo.addons.il_google_calendar.models.google_sync import GoogleSync
 from odoo.tests.common import HttpCase, new_test_user
 from freezegun import freeze_time
 from contextlib import contextmanager

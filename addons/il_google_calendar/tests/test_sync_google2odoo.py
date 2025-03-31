@@ -7,8 +7,8 @@ from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.tests.common import new_test_user
 from odoo.exceptions import ValidationError
-from odoo.addons.til_google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
-from odoo.addons.til_google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
+from odoo.addons.il_google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
+from odoo.addons.il_google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
 from odoo import Command, tools
 from unittest.mock import patch
 
