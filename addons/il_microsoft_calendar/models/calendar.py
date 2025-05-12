@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import is_html_empty, email_normalize
-from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
+from odoo.addons.il_microsoft_calendar.utils.event_id_storage import combine_ids
 from odoo.osv import expression
 
 ATTENDEE_CONVERTER_O2M = {
@@ -309,6 +309,13 @@ class Meeting(models.Model):
         else:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
         values = default_values or {}
+
+        meeting_source_values = []
+        related_event = self.search([('microsoft_id', '=', microsoft_event.id)], limit=1)
+        if not related_event or not related_event.meeting_source:
+            meeting_source_values = 'outlook_to_odoo'
+        if self:
+            self.new_attendee_ids = None
         values.update({
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.body and microsoft_event.body['content'],
@@ -321,7 +328,10 @@ class Meeting(models.Model):
             'stop': stop,
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent(),
-            'new_attendee_ids': [(0, 0, attendee_record) for attendee_record in attendee_list] # assigning value to attendee name
+            'new_attendee_ids': [(0, 0, attendee_record) for attendee_record in attendee_list],
+            'meeting_source': [(0, 0, {
+                'meeting_selection': meeting_source_values,
+            })],
         })
         if commands_partner:
             # Add partner_commands only if set from Microsoft. The write method on calendar_events will

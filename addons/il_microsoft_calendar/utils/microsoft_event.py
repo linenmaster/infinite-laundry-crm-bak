@@ -6,7 +6,7 @@ from odoo.api import model
 from typing import Iterator, Mapping
 from collections import abc
 from odoo.tools import ReadonlyDict, email_normalize
-from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
+from odoo.addons.il_microsoft_calendar.utils.event_id_storage import combine_ids
 
 
 class MicrosoftEvent(abc.Set):

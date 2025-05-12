@@ -7,8 +7,8 @@ from odoo import fields
 
 from odoo.tests.common import HttpCase
 
-from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
-from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
+from odoo.addons.il_microsoft_calendar.models.microsoft_sync import MicrosoftSync
+from odoo.addons.il_microsoft_calendar.utils.event_id_storage import combine_ids
 
 def mock_get_token(user):
     return f"TOKEN_FOR_USER_{user.id}"
