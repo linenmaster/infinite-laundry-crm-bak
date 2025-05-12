@@ -176,7 +176,7 @@ class GoogleSync(models.AbstractModel):
 
         odoo_values = [
             dict(self._odoo_values(e, default_reminders), need_sync=False)
-            for e in google_events
+            for e in new
         ]
         start_date = self.env['ir.config_parameter'].sudo().get_param('google_start_date')
         start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")  # Adjust the format based on the string format
@@ -317,6 +317,11 @@ class GoogleSync(models.AbstractModel):
                         self.with_context(dont_notify=True).write({
                             'google_id': google_id,
                             'need_sync': False,
+                        })
+                    if not self.meeting_source.filtered(lambda m: m.meeting_selection == 'odoo_to_gmail'):
+                        self.env['meeting.source'].create({
+                            'calendar_event_id': self.id,
+                            'meeting_selection': 'odoo_to_gmail',
                         })
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):

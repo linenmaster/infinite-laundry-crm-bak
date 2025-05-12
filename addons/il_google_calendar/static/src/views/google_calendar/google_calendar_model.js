@@ -27,11 +27,14 @@ patch(AttendeeCalendarModel.prototype, {
             return super.updateData(...arguments);
         }
         try {
+        debugger;
+        if (!this.state.microsoftIsSync) {
             await Promise.race([
                 new Promise(resolve => setTimeout(resolve, 1000)),
+
                 this.syncGoogleCalendar(true)
             ]);
-        } catch (error) {
+        }} catch (error) {
             if (error.event) {
                 error.event.preventDefault();
             }
@@ -42,6 +45,12 @@ patch(AttendeeCalendarModel.prototype, {
     },
 
     async syncGoogleCalendar(silent = false) {
+        debugger;
+        if (this.state.microsoftIsSync) {
+                alert("Microsoft calendar is already synced. You cannot sync Google calendar at the same time.");
+                return;
+        }
+
         this.googlePendingSync = true;
         const result = await this.rpc(
             "/google_calendar/sync_data",
