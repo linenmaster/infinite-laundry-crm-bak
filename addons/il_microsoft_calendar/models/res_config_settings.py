@@ -19,10 +19,8 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('outlook_start_date')
     def _check_start_date_change(self):
         if self.outlook_start_date:
-            stored_start_date = self.env['ir.config_parameter'].sudo().get_param('outlook_start_date')
-            if stored_start_date:
-                stored_start_date = fields.Datetime.from_string(stored_start_date)
-                if self.outlook_start_date > stored_start_date:
-                    raise UserError(
-                        "You can only set the date to an earlier or the same date. You cannot set it to a future date.")
+            current_datetime = fields.Datetime.now()
+            if self.outlook_start_date > current_datetime:
+                raise UserError(
+                    "Invalid date selection: you cannot choose a future date and time.")
 

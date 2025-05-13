@@ -4,7 +4,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
-
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
@@ -19,14 +18,8 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('start_date')
     def _check_google_start_date(self):
         if self.start_date:
-            # Get the original stored value of the start_date
-            stored_start_date = self.env['ir.config_parameter'].sudo().get_param('google_start_date')
-
-            if stored_start_date:
-                stored_start_date = fields.Datetime.from_string(stored_start_date)
-
-                # Check if the new date is later than the stored date
-                if self.start_date > stored_start_date:
-                    raise UserError(
-                        "You can only set the date to an earlier or the same date. You cannot set it to a future date.")
+            current_datetime = fields.Datetime.now()
+            if self.start_date > current_datetime:
+                raise UserError(
+                    "Invalid date selection: you cannot choose a future date and time.")
 

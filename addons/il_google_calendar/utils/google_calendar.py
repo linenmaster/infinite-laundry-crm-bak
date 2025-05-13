@@ -43,7 +43,7 @@ class GoogleCalendarService():
             url = base_url
             if start_date:
                 params['timeMin'] = start_date
-                _logger.info("Syncing events by date: %s to %s", start_date)
+                _logger.info(f"Syncing events by date: {start_date} ")
             else:
                 # fallback to default date range of ±365 days
                 day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))

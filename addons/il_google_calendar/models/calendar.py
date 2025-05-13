@@ -151,8 +151,16 @@ class Meeting(models.Model):
             meeting_source_values = [(0, 0, {
                 'meeting_selection': 'gmail_to_odoo'
             })]
-        if related_event:
-            related_event.new_attendee_ids = None
+        unique_attendee = []
+        for attendee in list({item['email']: item for item in attendee_list}.values()):
+            get_attendee = self.env['calendar.event.attendee'].search([('email', '=', attendee.get('email'))], limit=1)
+            if not get_attendee:
+                get_attendee = self.env['calendar.event.attendee'].create({
+                    'email' : attendee.get('email'),
+                    'name' : attendee.get('name')
+                })
+            unique_attendee.append(get_attendee.id)
+
         values = {
             'name': name,
             'description': google_event.description and tools.html_sanitize(google_event.description),
@@ -165,7 +173,7 @@ class Meeting(models.Model):
             'videocall_location': google_event.get_meeting_url(),
             'show_as': 'free' if google_event.is_available() else 'busy',
             'guests_readonly': not bool(google_event.guestsCanModify),
-            'new_attendee_ids': [(0, 0, attendee_record) for attendee_record in attendee_list],
+            'new_attendee_ids': unique_attendee,
             'meeting_source': meeting_source_values,
         }
         # Remove 'videocall_location' when not sent by Google, otherwise the local videocall will be discarded.

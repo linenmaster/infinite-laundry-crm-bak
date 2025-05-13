@@ -314,8 +314,17 @@ class Meeting(models.Model):
         related_event = self.search([('microsoft_id', '=', microsoft_event.id)], limit=1)
         if not related_event or not related_event.meeting_source:
             meeting_source_values = 'outlook_to_odoo'
-        if self:
-            self.new_attendee_ids = None
+
+        unique_attendee = []
+        for attendee in list({item['email']: item for item in attendee_list}.values()):
+            get_attendee = self.env['calendar.event.attendee'].search([('email', '=', attendee.get('email'))], limit=1)
+            if not get_attendee:
+                get_attendee = self.env['calendar.event.attendee'].create({
+                    'email' : attendee.get('email'),
+                    'name' : attendee.get('name')
+                })
+            unique_attendee.append(get_attendee.id)
+
         values.update({
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.body and microsoft_event.body['content'],
@@ -328,7 +337,7 @@ class Meeting(models.Model):
             'stop': stop,
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent(),
-            'new_attendee_ids': [(0, 0, attendee_record) for attendee_record in attendee_list],
+            'new_attendee_ids': unique_attendee,
             'meeting_source': [(0, 0, {
                 'meeting_selection': meeting_source_values,
             })],
