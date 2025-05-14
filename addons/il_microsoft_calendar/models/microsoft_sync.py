@@ -469,17 +469,6 @@ class MicrosoftSync(models.AbstractModel):
         """
         if not values:
             return
-
-        meeting_source_values = []
-        related_event = self.search([('microsoft_id', '=', self.microsoft_id)], limit=1)
-        if not related_event or not related_event.meeting_source:
-            meeting_source_values = [(0, 0, {
-                'meeting_selection': 'odoo_to_outlook'
-            })]
-
-        # Now, add 'meeting_source' to values
-        values['meeting_source'] = meeting_source_values
-
         microsoft_service = self._get_microsoft_service()
         sender_user = self._get_event_user_m()
         with microsoft_calendar_token(sender_user.sudo()) as token:
@@ -490,7 +479,13 @@ class MicrosoftSync(models.AbstractModel):
                     'microsoft_id': combine_ids(event_id, uid),
                     'need_sync_m': False,
                 })
-
+                print('hello1')
+                if not self.meeting_source.filtered(lambda m: m.meeting_selection == 'odoo_to_outlook'):
+                    print('hello2')
+                    self.env['meeting.source'].create({
+                        'calendar_event_id': self.id,
+                        'meeting_selection': 'odoo_to_outlook',
+                    })
 
     def _microsoft_attendee_answer(self, answer, params, timeout=TIMEOUT):
         if not answer:
