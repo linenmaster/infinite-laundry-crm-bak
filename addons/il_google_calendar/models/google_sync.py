@@ -181,7 +181,8 @@ class GoogleSync(models.AbstractModel):
         start_date = self.env['ir.config_parameter'].sudo().get_param('google_start_date')
         start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")  # Adjust the format based on the string format
 
-        odoo_values = [event for event in odoo_values if event.get('start') and event.get('start') > start_date] #[event for event in odoo_values if event['start']>fields.datetime.now()]
+        if self._name == 'calendar.event':
+            odoo_values = [event for event in odoo_values if event.get('start') and event.get('start') > start_date] #[event for event in odoo_values if event['start']>fields.datetime.now()]
         new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env)).exists()

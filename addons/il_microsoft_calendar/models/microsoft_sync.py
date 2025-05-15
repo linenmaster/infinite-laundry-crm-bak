@@ -479,9 +479,7 @@ class MicrosoftSync(models.AbstractModel):
                     'microsoft_id': combine_ids(event_id, uid),
                     'need_sync_m': False,
                 })
-                print('hello1')
                 if not self.meeting_source.filtered(lambda m: m.meeting_selection == 'odoo_to_outlook'):
-                    print('hello2')
                     self.env['meeting.source'].create({
                         'calendar_event_id': self.id,
                         'meeting_selection': 'odoo_to_outlook',
