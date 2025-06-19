@@ -5,10 +5,10 @@ from datetime import timedelta
 from odoo import fields
 
 from odoo.exceptions import UserError
-odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
-from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.microsoft_calendar.models.res_users import User
-from odoo.addons.microsoft_calendar.tests.common import (
+from odoo.addons.il_microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
+from odoo.addons.il_microsoft_calendar.utils.microsoft_event import MicrosoftEvent
+from odoo.addons.il_microsoft_calendar.models.res_users import User
+from odoo.addons.il_microsoft_calendar.tests.common import (
     TestCommon,
     mock_get_token,
     _modified_date_in_the_future,

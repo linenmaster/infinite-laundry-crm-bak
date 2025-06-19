@@ -2,8 +2,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
-from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.microsoft_calendar.tests.common import TestCommon, patch_api
+from odoo.addons.il_microsoft_calendar.utils.microsoft_event import MicrosoftEvent
+from odoo.addons.il_microsoft_calendar.tests.common import TestCommon, patch_api
 
 class TestMicrosoftEvent(TestCommon):
 

@@ -15,12 +15,19 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onGoogleSyncCalendar() {
+    debugger;
+
+
         await this.orm.call(
             "res.users",
             "restart_google_synchronization",
             [[this.user.userId]],
         );
         const syncResult = await this.model.syncGoogleCalendar();
+        if (!syncResult) {
+        console.error("Sync result is invalid, cannot proceed.");
+        return;
+        }
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {

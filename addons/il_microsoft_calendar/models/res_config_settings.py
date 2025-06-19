@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -14,3 +15,12 @@ class ResConfigSettings(models.TransientModel):
     custom_module_outlook_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar', config_parameter='custom_module_outlook_calendar')
     outlook_start_date = fields.Datetime(string='Start Date', config_parameter='outlook_start_date',)
+
+    @api.onchange('outlook_start_date')
+    def _check_start_date_change(self):
+        if self.outlook_start_date:
+            current_datetime = fields.Datetime.now()
+            if self.outlook_start_date > current_datetime:
+                raise UserError(
+                    "Invalid date selection: you cannot choose a future date and time.")
+

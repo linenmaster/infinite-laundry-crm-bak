@@ -27,6 +27,10 @@ class Meeting(models.Model):
                                         ondelete={'google_meet': 'set discuss'})
     new_attendee_ids = fields.Many2many('calendar.event.attendee', string='Attendees')
 
+    meeting_source = fields.One2many('meeting.source','calendar_event_id', string='Meeting Source')
+
+
+
     @api.depends('recurrence_id.google_id')
     def _compute_google_id(self):
         # google ids of recurring events are built from the recurrence id and the
@@ -142,6 +146,21 @@ class Meeting(models.Model):
         attendee_commands, partner_commands, attendee_list = self._odoo_attendee_commands(google_event)
         related_event = self.search([('google_id', '=', google_event.id)], limit=1)
         name = google_event.summary or related_event and related_event.name or _("(No title)")
+        meeting_source_values = []
+        if not related_event or not related_event.meeting_source:
+            meeting_source_values = [(0, 0, {
+                'meeting_selection': 'gmail_to_odoo'
+            })]
+        unique_attendee = []
+        for attendee in list({item['email']: item for item in attendee_list}.values()):
+            get_attendee = self.env['calendar.event.attendee'].search([('email', '=', attendee.get('email'))], limit=1)
+            if not get_attendee:
+                get_attendee = self.env['calendar.event.attendee'].create({
+                    'email' : attendee.get('email'),
+                    'name' : attendee.get('name')
+                })
+            unique_attendee.append(get_attendee.id)
+
         values = {
             'name': name,
             'description': google_event.description and tools.html_sanitize(google_event.description),
@@ -154,7 +173,8 @@ class Meeting(models.Model):
             'videocall_location': google_event.get_meeting_url(),
             'show_as': 'free' if google_event.is_available() else 'busy',
             'guests_readonly': not bool(google_event.guestsCanModify),
-            'new_attendee_ids': [(0, 0, attendee_record) for attendee_record in attendee_list],
+            'new_attendee_ids': unique_attendee,
+            'meeting_source': meeting_source_values,
         }
         # Remove 'videocall_location' when not sent by Google, otherwise the local videocall will be discarded.
         if not values.get('videocall_location'):
@@ -193,18 +213,22 @@ class Meeting(models.Model):
         partner_commands = []
         google_attendees = google_event.attendees or []
         attendee_list = []
-        check_duplicate = []
+        check_duplicate = set()
+
         for attendee in google_attendees:
             email = attendee.get('email')
-            name = email.split('@')[0]  # Assuming the part before @ is the name
+            if not email:
+                continue
 
-            # Create attendee record in the new model
-            attendee_record = {
-                'name': name,
-                'email': email,
-            }
-            if not email in check_duplicate:
-                check_duplicate.append(email)
+            email = email.strip().lower()
+            name = email.split('@')[0]
+
+            if email not in check_duplicate:
+                check_duplicate.add(email)
+                attendee_record = {
+                    'name': name,
+                    'email': email,
+                }
                 attendee_list.append(attendee_record)
 
         if len(google_attendees) == 0 and google_event.organizer and google_event.organizer.get('self', False):
@@ -397,3 +421,14 @@ class CalendarEventAttendee(models.Model):
 
     name = fields.Char(string='Attendee Name')
     email = fields.Char(string='Attendee Email')
+
+class MeetingSource(models.Model):
+    _name = 'meeting.source'
+
+    calendar_event_id = fields.Many2one('calendar.event', string='Calendar Event')
+    meeting_selection = fields.Selection([
+        ('odoo_to_gmail', 'Odoo to Gmail'),
+        ('gmail_to_odoo', 'Gmail to Odoo'),
+        ('odoo_to_outlook', 'Odoo to Outlook'),
+        ('outlook_to_odoo', 'Outlook to Odoo'),
+    ], string='Select Meeting')

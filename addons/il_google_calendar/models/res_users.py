@@ -5,6 +5,7 @@ import logging
 
 
 from odoo import api, fields, models, Command
+from datetime import datetime, timedelta
 from odoo.addons.il_google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
 from odoo.addons.il_google_calendar.models.google_sync import google_calendar_token
 from odoo.loglevels import exception_to_unicode
@@ -109,27 +110,44 @@ class User(models.Model):
     def _sync_request(self, calendar_service, event_id=None):
         if self._get_google_sync_status() != "sync_active":
             return False
-        # don't attempt to sync when another sync is already in progress, as we wouldn't be
-        # able to commit the transaction anyway (row is locked)
+
+        # Don't attempt to sync when another sync is already in progress, as we wouldn't be able to commit the transaction anyway (row is locked)
         self.env.cr.execute("""SELECT id FROM res_users WHERE id = %s FOR NO KEY UPDATE SKIP LOCKED""", [self.id])
         if not self.env.cr.rowcount:
-            _logger.info("skipping calendar sync, locked user %s", self.login)
+            _logger.info("Skipping calendar sync, locked user %s", self.login)
             return False
 
         full_sync = not bool(self.google_calendar_sync_token)
+        start_raw = self.env['ir.config_parameter'].sudo().get_param('google_start_date')
+        start_dt = fields.Datetime.from_string(start_raw)
+        start_str = start_dt.strftime('%Y-%m-%dT%H:%M:%S') + '-07:00'
+
+        # Using the access token to interact with Google API
         with google_calendar_token(self) as token:
             try:
+                # Fetch events by providing start and end dates (no syncToken used)
                 if not event_id:
-                    events, next_sync_token, default_reminders = calendar_service.get_events(self.google_calendar_account_id.calendar_sync_token, token=token)
+                    events, next_sync_token, default_reminders = calendar_service.get_events(
+                        token=token,
+                        start_date=start_str,
+
+                    )
                 else:
-                    # We force the sync_token parameter to avoid doing a full sync.
-                    # Other events are fetched when the calendar view is displayed.
-                    events, next_sync_token, default_reminders = calendar_service.get_events(sync_token=token, token=token, event_id=event_id)
+                    # Fetch a single event by its event ID
+                    events, next_sync_token, default_reminders = calendar_service.get_events(
+                        token=token,
+                        event_id=event_id
+                    )
             except InvalidSyncToken:
+                # If invalid sync token, fallback to full sync
                 events, next_sync_token, default_reminders = calendar_service.get_events(token=token)
                 full_sync = True
+
+        # If we have a new sync token, store it for future requests
         if next_sync_token:
             self.google_calendar_account_id.calendar_sync_token = next_sync_token
+
+        # Proceed with processing and syncing the events
         return {
             'events': events,
             'default_reminders': default_reminders,
