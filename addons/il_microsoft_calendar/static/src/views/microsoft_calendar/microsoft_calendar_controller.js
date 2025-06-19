@@ -14,12 +14,18 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onMicrosoftSyncCalendar() {
+    debugger;
         await this.orm.call(
             "res.users",
             "restart_microsoft_synchronization",
             [[this.user.userId]],
         );
+        debugger;
         const syncResult = await this.model.syncMicrosoftCalendar();
+        if (!syncResult) {
+        console.error("Sync result is invalid, cannot proceed.");
+        return;  // Prevent further execution if syncResult is invalid
+        }
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {

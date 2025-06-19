@@ -13,9 +13,9 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.sql_db import BaseCursor
 
-from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
-from odoo.addons.microsoft_calendar.utils.event_id_storage import IDS_SEPARATOR, combine_ids, split_ids
+from odoo.addons.il_microsoft_calendar.utils.microsoft_event import MicrosoftEvent
+from odoo.addons.il_microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
+from odoo.addons.il_microsoft_calendar.utils.event_id_storage import IDS_SEPARATOR, combine_ids, split_ids
 from odoo.addons.microsoft_account.models.microsoft_service import TIMEOUT
 
 _logger = logging.getLogger(__name__)
@@ -479,6 +479,11 @@ class MicrosoftSync(models.AbstractModel):
                     'microsoft_id': combine_ids(event_id, uid),
                     'need_sync_m': False,
                 })
+                if not self.meeting_source.filtered(lambda m: m.meeting_selection == 'odoo_to_outlook'):
+                    self.env['meeting.source'].create({
+                        'calendar_event_id': self.id,
+                        'meeting_selection': 'odoo_to_outlook',
+                    })
 
     def _microsoft_attendee_answer(self, answer, params, timeout=TIMEOUT):
         if not answer:

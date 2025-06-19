@@ -4,3 +4,5 @@ google_calendar.access_google_calendar_credentials,access_google_calendar_creden
 google_calendar_manager,access_google_calendar_credentials_manager,il_google_calendar.model_google_calendar_credentials,base.group_system,1,1,0,0
 il_google_calendar.access_calendar_event_attendee,access_calendar_event_attendee,il_google_calendar.model_calendar_event_attendee,base.group_user,1,1,1,1
 
+il_google_calendar.access_meeting_source,access_meeting_source,il_google_calendar.model_meeting_source,base.group_user,1,1,1,1
+

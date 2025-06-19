@@ -8,7 +8,8 @@ import logging
 from werkzeug import urls
 
 from odoo import fields
-from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
+from datetime import datetime, timedelta
+from odoo.addons.il_microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_account.models.microsoft_service import TIMEOUT, RESOURCE_NOT_FOUND_STATUSES
 
 _logger = logging.getLogger(__name__)
@@ -105,7 +106,17 @@ class MicrosoftCalendarService():
         See: https://docs.microsoft.com/en-us/graph/api/event-delta?view=graph-rest-1.0&tabs=http
         """
         url = "/v1.0/me/calendarView/delta"
-        params = {'$deltatoken': sync_token} if sync_token else None
+        start_date_str = self.microsoft_service.env['ir.config_parameter'].sudo().get_param('outlook_start_date')
+        dt_start = datetime.strptime(start_date_str, "%Y-%m-%d %H:%M:%S")
+        dt_end = dt_start + timedelta(days=365 * 5)
+
+        start_formatted = dt_start.strftime("%Y-%m-%dT%H:%M:%S.0000000")
+        end_formatted = dt_end.strftime("%Y-%m-%dT%H:%M:%S.0000000")
+
+        params = {
+            'startDateTime': start_formatted,
+            'endDateTime': end_formatted,
+        }
 
         try:
             events, next_sync_token = self._get_events_from_paginated_url(

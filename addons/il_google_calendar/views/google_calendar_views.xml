@@ -20,9 +20,14 @@
             <xpath expr="//div[@class='alert alert-warning o_form_header mt-2']" position="after">
                     <field name="new_attendee_ids" readonly="1" widget="many2many_tags" string="Meeting Attendees"/>
             </xpath>
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="meeting_source" readonly="1">
+                    <tree editable="bottom">
+                        <field name="meeting_selection"/>
+                    </tree>
+                </field>
+            </xpath>
+
         </field>
     </record>
-
-
-
 </odoo>

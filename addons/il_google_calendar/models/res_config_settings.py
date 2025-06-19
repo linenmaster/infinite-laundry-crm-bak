@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-
+from odoo.exceptions import UserError
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
@@ -14,3 +14,12 @@ class ResConfigSettings(models.TransientModel):
     custom_module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar', config_parameter='custom_module_google_calendar')
     start_date = fields.Datetime(string='Start Date', config_parameter='google_start_date',)
+
+    @api.onchange('start_date')
+    def _check_google_start_date(self):
+        if self.start_date:
+            current_datetime = fields.Datetime.now()
+            if self.start_date > current_datetime:
+                raise UserError(
+                    "Invalid date selection: you cannot choose a future date and time.")
+
