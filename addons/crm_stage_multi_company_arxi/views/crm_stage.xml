@@ -11,5 +11,33 @@
             </field>
         </field>
     </record>
-
+	<record model="ir.ui.view" id="crm_stage_tree_infinite">
+        <field name="name">crm.stage.form (in crm_stage_multi_company).infinite</field>
+        <field name="model">crm.stage</field>
+        <field name="inherit_id" ref="crm.crm_stage_tree"/>
+        <field name="arch" type="xml">
+            <field name="is_won" position="before">
+            	<field name="company_ids" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company" widget="many2many_tags"/>
+            </field>
+            <field name="team_id" position="replace">
+            	<field name="team_id" column_invisible="True"/>
+            </field>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_lead_stage_search_infinite">
+        <field name="name">crm.stage.search.infinite</field>
+        <field name="model">crm.stage</field>
+        <field name="inherit_id" ref="crm.crm_lead_stage_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="company_ids"/>
+            </field>
+            <xpath expr="//search" position="inside">
+            	<separator/>
+	            <group expand="0" string="Group By">
+	                <filter string="Company" name="gb_company_ids" context="{'group_by':'company_ids'}"/>
+	            </group>
+            </xpath> 
+        </field>
+    </record>
 </odoo>
