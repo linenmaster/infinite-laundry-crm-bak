@@ -11,6 +11,6 @@
     'currency'      : 'EUR',
     "installable"   : True,
     "application"   : False,
-    "data"          : ["views/crm_stage.xml", "security/crm_security.xml"],
+    "data"          : ["security/ir.model.access.csv", "views/crm_stage.xml", "security/crm_security.xml"],
     'images'        : ['static/description/banner.gif'],
 }
