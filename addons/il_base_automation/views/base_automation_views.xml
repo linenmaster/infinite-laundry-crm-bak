@@ -6,6 +6,10 @@
 		<field name="model">base.automation</field>
 		<field name="inherit_id" ref="base_automation.view_base_automation_form"/>
 		<field name="arch" type="xml">
+			<xpath expr="//field[@name='filter_pre_domain']" position="attributes">
+				<attribute name="groups"></attribute>
+				<!-- <field name="filter_pre_domain" widget="domain" groups="base.group_no_one" options="{'model': 'model_name', 'in_dialog': True}" invisible="trigger == 'on_webhook'"/> -->
+			</xpath>
 			<xpath expr="//notebook" position="before">
 				<group>
 					<field name="user_ids" widget="many2many_tags" 
