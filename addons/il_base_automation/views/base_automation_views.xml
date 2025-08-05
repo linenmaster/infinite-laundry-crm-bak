@@ -69,7 +69,7 @@
 	    </field>
 	</record>
 
-	<menuitem id="menu_sub_crm_automation_il" name="Automion"
+	<menuitem id="menu_sub_crm_automation_il" name="Automation"
 	    parent="crm.crm_menu_config" sequence="20"/>
 	<menuitem id="menu_base_automation_crm_il" action="base_automation_act_crm_il"
 	    parent="menu_sub_crm_automation_il" sequence="1"/>
