@@ -24,13 +24,11 @@ class BaseAutomation(models.Model):
         # Example: Set default to current user and another specific user
         current_user = self.env.user
         # other_user = self.sudo().env.ref('base.group_system')  # Replace with actual user XML ID or logic
-        return [(6, 0, [current_user.id])]#, other_user.id
+        return [(6, 0, [current_user.id])]
 
     user_ids = fields.Many2many("res.users", relation="base_automation_users_rel",
         string="Allowed Users", default=lambda self: self._default_users())
     
-    # user_ids = fields.Many2many("res.users", relation="base_automation_users_rel",
-    #     string="Allowed Users")
 
 DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: environment on which the action is triggered
@@ -47,7 +45,7 @@ DEFAULT_PYTHON_CODE = """# Available variables:
 class IrActionsServer(models.Model):
     _inherit = 'ir.actions.server'
 
-    #overridding python_code field for sale_manager
+    #overriding python_code field for sale_manager
     code = fields.Text(string='Python Code', groups='base.group_system,sales_team.group_sale_manager',
                        default=DEFAULT_PYTHON_CODE,
                        help="Write Python code that the action will execute. Some variables are "
