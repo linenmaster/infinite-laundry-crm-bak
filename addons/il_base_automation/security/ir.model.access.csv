@@ -1,6 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_base_automation_sm,base.automation config.sm,base_automation.model_base_automation,sales_team.group_sale_manager,1,1,1,0
+access_base_automation_user,base.automation config.user,base_automation.model_base_automation,base.group_user,1,0,0,0
 
-access_ir_actions_server_sm,access_ir_actions_server_sm,base.model_ir_actions_server,sales_team.group_sale_manager,1,1,1,0
+access_ir_actions_server_sm,access_ir_actions_server_sm,base.model_ir_actions_server,sales_team.group_sale_manager,1,1,1,1
 access_ir_model_fields_sm,access_ir_model_fields_sm,base.model_ir_model_fields,sales_team.group_sale_manager,1,0,0,0
 access_ir_cron_sm,access_ir_cron_sm,base.model_ir_cron,sales_team.group_sale_manager,1,1,1,0
+
+access_ir_actions_todo_group_sm,ir_actions_todo group sm,base.model_ir_actions_todo,sales_team.group_sale_manager,1,1,1,1
