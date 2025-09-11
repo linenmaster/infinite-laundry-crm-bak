@@ -18,6 +18,7 @@
         'security/ir.model.access.csv',
         'security/automation_security.xml',
         'views/base_automation_views.xml',
+        'views/res_company_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
