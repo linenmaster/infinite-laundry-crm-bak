@@ -19,11 +19,10 @@ class CrmStage(models.Model):
 
 class CrmLead(models.Model):
     _inherit = "crm.lead"
-    def _stage_find(self, team_id=False, domain=None, order='sequence, id', limit=1):
+    def _stage_find(self, team_id=False, domain=[], order='sequence, id', limit=1):
         """ override the function """
-        res = super(CrmLead, self)._stage_find(team_id=team_id, domain=domain, order=order, limit=limit)
         domain += [('company_ids','in',[self.env.user.company_id.id])]
-        return self.env['crm.stage'].search(domain, order=order, limit=limit)
+        return super(CrmLead, self)._stage_find(team_id=team_id, domain=domain, order=order, limit=limit)
 
     def action_send_email_to_customer(self):
         """
